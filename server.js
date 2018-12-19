@@ -32,7 +32,7 @@ app.get('/', function(req, res) {
   });
 
   //lisättävät tiedot guestbookiin
-  app.post("/newmessage", function(req,res){
+app.post("/newmessage", function(req,res){
 
     const MongoClient = require("mongodb").MongoClient;
     // Connection URL
@@ -73,7 +73,6 @@ app.get('/', function(req, res) {
   }
   });
   });
-
 
 
   app.listen(8081);
