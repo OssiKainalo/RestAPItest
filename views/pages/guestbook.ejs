@@ -13,8 +13,8 @@
      <h1 class="logo"><a></a></h1>
      <ul class="topNav">
   	    <li><a href="/" >HOME</a></li>
-  		<li><a href="/guestbook" class="topNavAct">GUESTBOOK</a></li>
-  		<li><a href="/newmessage" class="topNavLast">NEW MESSAGE</a></li>
+  		<li><a href="/api/getall" class="topNavAct">MOVIES</a></li>
+  		<li><a href="/api/addmovie" class="topNavLast">ADD MOVIE</a></li>
 
   	  </ul><br class="clear" />
      </div>
@@ -23,7 +23,7 @@
     <div class="contant_1">
 	<div class="contant_1_left">
 	  <h2>
-       Guestbook
+       Movies
        <span></span>
       </h2>
 
@@ -32,13 +32,15 @@
 
               <table cellspacing="10">
               <tr>
-                <th>Title</th><th>Year</th>
+                <th>Movie</th><th>Year</th>
               </tr>
                 <!--printtaa taulukon datan for loopilla -->
                 <td><% for (var i=0; i < collection.length; i++) { %>
                   <tr>
                     <td><%=collection[i].title %></td>
                     <td><%=collection[i].year %></td>
+
+
                   </tr>
                 <% } %>
               </table>

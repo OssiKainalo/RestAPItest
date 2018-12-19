@@ -1,41 +1,205 @@
 var express = require("express");
 var router = express.Router();
+router.use(express.static("views")); //pääsy mediaan ja styleen
 
-// Define the home page route
-router.get("/", function(req, res) {
-  res.send("You need to use POST, PUT, DELETE AND GET requests");
-});
+router.get('/', function(req, res) {
+  res.render('pages/index');
+  });
 
-router.post("/addmovie", function(req, res) {
-  res.json({ message: "Adding movie!" });
-});
+  router.get("/addmovie", function(req,res) {
+    res.render("pages/newmessage");
+  });
 
-router.get("/getall", function(req, res) {
-  // Add database routine here
-  ///////////////////////////////
+router.get("/guestbook", function(req, res) {
+  //////////////////////////////////////////////
 
-  var mongoose = require("mongoose");
-  require("./models.js");
+  const MongoClient = require("mongodb").MongoClient;
+  // Connection URL
+  //const url = "mongodb://localhost:27017/";
+  const url = "mongodb://user:password123@ds026018.mlab.com:26018/ottodb";
 
-  var url = "mongodb://user:password123@ds026018.mlab.com:26018/ottodb";
+  // Database Name
+  const dbName = "ottodb";
+  const collectionName = "movies";
 
-  // Connecto to db
-  mongoose.connect(url);
-  // Use the movie-model created in models.js - no schema definition anymore
-  var movie = mongoose.model("movie");
-  // Find all the Cat objects from the database
-  movie
-    .find({})
-    .limit(10)
-    .then(function(err, result) {
-      // in case of errors
-      if (err) res.status(404).json(err);
-      // if we are ok, show the data with statuscode 200 (OK)
-      console.log(result);
-      res.status(200).json(result);
+  MongoClient.connect(
+    url,
+    { useNewUrlParser: true },
+    function(err, client) {
+      if (err) {
+        console.log("Unable to connect to the mongoDB server. Error:", err);
+      } else {
+        console.log("Connection established to", url);
+
+        const db = client.db(dbName);
+
+        var query = { };
+        db.collection(collectionName)
+          .find(query)
+          .limit(20)
+
+          .toArray(function(err, result) {
+            if (err) {
+              console.log(err);
+              res.status("400").send({ error: err });
+            } else if (result.length) {
+              //console.log("Found:", result);
+
+              res.render("pages/guestbook", { collection: result });
+            } else {
+              console.log('No document(s) found with defined "find" criteria!');
+              res.status("400").send({ error: "No document(s) found" });
+            }
+            //Close connection
+            client.close();
+          });
+      } // else {
+    } // function
+  );
     });
 
-  ///////////////////////////////
-});
+    router.get("/getall", function(req, res) {
+      //////////////////////////////////////////////
+
+      const MongoClient = require("mongodb").MongoClient;
+      // Connection URL
+      //const url = "mongodb://localhost:27017/";
+      const url = "mongodb://user:password123@ds026018.mlab.com:26018/ottodb";
+
+      // Database Name
+      const dbName = "ottodb";
+      const collectionName = "movies";
+
+      MongoClient.connect(
+        url,
+        { useNewUrlParser: true },
+        function(err, client) {
+          if (err) {
+            console.log("Unable to connect to the mongoDB server. Error:", err);
+          } else {
+            console.log("Connection established to", url);
+
+            const db = client.db(dbName);
+
+            var query = { };
+            db.collection(collectionName)
+              .find(query)
+              .limit(20)
+
+              .toArray(function(err, result) {
+                if (err) {
+                  console.log(err);
+                  res.status("400").send({ error: err });
+                } else if (result.length) {
+                  //console.log("Found:", result);
+
+                  res.render("pages/guestbook", { collection: result });
+                } else {
+                  console.log('No document(s) found with defined "find" criteria!');
+                  res.status("400").send({ error: "No document(s) found" });
+                }
+                //Close connection
+                client.close();
+              });
+          } // else {
+        } // function
+      );
+        });
+
+        //lisättävät tiedot guestbookiin
+        router.post("/api/addmovie", function(req,res){
+
+          const MongoClient = require("mongodb").MongoClient;
+          // Connection URL
+          //const url = "mongodb://localhost:27017/";
+          const url = "mongodb://user:password123@ds026018.mlab.com:26018/ottodb";
+
+          // Database Name
+          const dbName = "ottodb";
+          const collectionName = "movies";
+
+          MongoClient.connect(
+            url,
+            { useNewUrlParser: true },
+            function(err, client) {
+              if (err) {
+                console.log("Unable to connect to the mongoDB server. Error:", err);
+              } else {
+                console.log("Connection established to", url);
+
+                const db = client.db(dbName);
+
+                var query = { "title": req.body.title,
+                              "year": req.body.year
+                            };
+
+                db.collection(collectionName)
+                  .insertOne(query)
+                  client.close;
+                    res.redirect("/newmessage");
+
+        //  var data = require("./guests.json");
+          //data.push({
+          //  username: req.body.username,
+            //country: req.body.country,
+            //message: req.body.message,
+            //date: new Date()
+          //});
+        }
+        });
+        });
+
+
+
+
+
+        router.get("/movie", function(req, res) {
+          //////////////////////////////////////////////
+
+          const MongoClient = require("mongodb").MongoClient;
+          // Connection URL
+          //const url = "mongodb://localhost:27017/";
+          const url = "mongodb://user:password123@ds026018.mlab.com:26018/ottodb";
+
+          // Database Name
+          const dbName = "ottodb";
+          const collectionName = "movies";
+
+          MongoClient.connect(
+            url,
+            { useNewUrlParser: true },
+            function(err, client) {
+              if (err) {
+                console.log("Unable to connect to the mongoDB server. Error:", err);
+              } else {
+                console.log("Connection established to", url);
+
+                const db = client.db(dbName);
+
+                var query = {};
+                db.collection(collectionName)
+                  .find(query)
+                  .limit(1)
+
+                  .toArray(function(err, result) {
+                    if (err) {
+                      console.log(err);
+                      res.status("400").send({ error: err });
+                    } else if (result.length) {
+                      //console.log("Found:", result);
+
+                      res.render("pages/guestbook", { collection: result });
+                    } else {
+                      console.log('No document(s) found with defined "find" criteria!');
+                      res.status("400").send({ error: "No document(s) found" });
+                    }
+                    //Close connection
+                    client.close();
+                  });
+              } // else {
+            } // function
+          );
+            });
+
 
 module.exports = router;
