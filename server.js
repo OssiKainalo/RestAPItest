@@ -57,7 +57,6 @@ app.post("/newmessage", function(req,res){
           var query = { "title": req.body.title,
                         "year": req.body.year
                       };
-
           db.collection(collectionName)
             .insertOne(query)
             client.close;
@@ -77,10 +76,6 @@ app.post("/newmessage", function(req,res){
 
   app.listen(8081);
   console.log("8081 is the magic port");
-
-  ///////////////
-  // CALLBACK CODE
-
 
 
 /*//muuntaa jsoniksi
