@@ -14,8 +14,6 @@ router.get('/', function(req, res) {
 
 
     router.get("/getall", function(req, res) {
-      //////////////////////////////////////////////
-
       const MongoClient = require("mongodb").MongoClient;
       // Connection URL
       //const url = "mongodb://localhost:27017/";
@@ -63,9 +61,19 @@ router.get('/', function(req, res) {
 
 
 
-        router.get("/movie", function(req, res) {
-          //////////////////////////////////////////////
+//router.post('/', function (req, res){
+//  res.send('Got a POST request')
+//})
 
+//router.put('/user', function (req, res) {
+//  res.send('got a PUT request at /user')
+//})
+
+//router.delete('/user', function (req, res) {
+//  res.send('Got a PUT request at /user')
+//})
+
+        router.get("/movie", function(req, res) {
           const MongoClient = require("mongodb").MongoClient;
           // Connection URL
           //const url = "mongodb://localhost:27017/";
@@ -128,8 +136,8 @@ router.get('/', function(req, res) {
             //
             //   // create a movie (accessed at POST http://localhost:8080/bears)
             //   .post(function(req, res) {
-            //     var movie = new movie(); // create a new instance of the Bear model
-            //     movie.name = req.body.name; // set the bears name (comes from the request)
+            //     var movie = new movie(); // create a new instance of the movie model
+            //     movie.name = req.body.name; // set the movie name (comes from the request)
             //
             //     movie.save(function(err) {
             //       if (err) res.send(err);
@@ -186,56 +194,6 @@ router.get('/', function(req, res) {
             //       }
             //     );
             //   });
-
-            router.get("/movie", function(req, res) {
-              //////////////////////////////////////////////
-
-              const MongoClient = require("mongodb").MongoClient;
-              // Connection URL
-              //const url = "mongodb://localhost:27017/";
-              const url = "mongodb://user:password123@ds026018.mlab.com:26018/ottodb";
-
-              // Database Name
-              const dbName = "ottodb";
-              const collectionName = "movies";
-
-              MongoClient.connect(
-                url,
-                { useNewUrlParser: true },
-                function(err, client) {
-                  if (err) {
-                    console.log("Unable to connect to the mongoDB server. Error:", err);
-                  } else {
-                    console.log("Connection established to", url);
-
-                    const db = client.db(dbName);
-
-
-
-                    var query = {"title": "Otto 3"};
-                    db.collection(collectionName)
-                      .find(query)
-                      .limit(20)
-
-                      .toArray(function(err, result) {
-                        if (err) {
-                          console.log(err);
-                          res.status("400").send({ error: err });
-                        } else if (result.length) {
-                          //console.log("Found:", result);
-
-                          res.render("pages/guestbook", { collection: result });
-                        } else {
-                          console.log('No document(s) found with defined "find" criteria!');
-                          res.status("400").send({ error: "No document(s) found" });
-                        }
-                        //Close connection
-                        client.close();
-                      });
-                  } // else {
-                } // function
-              );
-                });
 
 
 module.exports = router;
